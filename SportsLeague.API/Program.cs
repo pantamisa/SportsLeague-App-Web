@@ -5,6 +5,8 @@ using SportsLeague.Domain.Interfaces.Repositories;
 using SportsLeague.Domain.Interfaces.Service;
 using SportsLeague.Domain.Interfaces.Services;
 using SportsLeague.Domain.Services;
+using SportsLeague.Domain.Helpers;
+using SportsLeague.DataAccess.Seeders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,10 +47,30 @@ builder.Services.AddScoped<ITournamentService, TournamentService>();
 
 builder.Services.AddScoped<ISponsorRepository, SponsorRepository>();
 builder.Services.AddScoped<ITournamentSponsorRepository, TournamentSponsorRepository>();
+builder.Services.AddScoped<IMatchRepository, MatchRepository>();
+builder.Services.AddScoped<IMatchResultRepository, MatchResultRepository>();
+builder.Services.AddScoped<IGoalRepository, GoalRepository>();
+builder.Services.AddScoped<ICardRepository, CardRepository>();
+builder.Services.AddScoped<IMatchLineupRepository, MatchLineupRepository>();
 
 builder.Services.AddScoped<ISponsorService, SponsorService>();
+builder.Services.AddScoped<IMatchService, MatchService>();
+builder.Services.AddScoped<IMatchEventService, MatchEventService>();
+builder.Services.AddScoped<IMatchLineupService, MatchLineupService>();
+builder.Services.AddScoped<MatchValidationHelper>();
+builder.Services.AddScoped<IStandingsService, StandingsService>();
 
 var app = builder.Build();
+
+// ── Data Seeder ──
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider
+        .GetRequiredService<LeagueDbContext>();
+
+    await context.Database.MigrateAsync();  // Aplica migraciones pendientes automáticamente
+    await DataSeeder.SeedAsync(context);    // Puebla la BD si está vacía
+}
 
 if (app.Environment.IsDevelopment())
 {

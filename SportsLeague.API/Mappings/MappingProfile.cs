@@ -33,5 +33,43 @@ public class MappingProfile : Profile {
         CreateMap<TournamentSponsor, TournamentSponsorResponseDTO>()
             .ForMember(dest => dest.TournamentName, opt => opt.MapFrom(src => src.Tournament.Name))
             .ForMember(dest => dest.SponsorName, opt => opt.MapFrom(src => src.Sponsor.Name));
+
+        // Match mappings
+        CreateMap<MatchRequestDTO, Match>();
+
+        CreateMap<Match, MatchResponseDTO>()
+            // Aplana las 4 Navigation Properties en campos string del DTO
+            .ForMember(dest => dest.TournamentName,
+                opt => opt.MapFrom(src => src.Tournament.Name))
+            .ForMember(dest => dest.HomeTeamName,
+                opt => opt.MapFrom(src => src.HomeTeam.Name))
+            .ForMember(dest => dest.AwayTeamName,
+                opt => opt.MapFrom(src => src.AwayTeam.Name))
+            .ForMember(dest => dest.RefereeFullName,
+                opt => opt.MapFrom(src => src.Referee.FirstName + " " + src.Referee.LastName));
+
+        // MatchResult mappings — mapeo directo sin ForMember adicionales
+        CreateMap<MatchResultRequestDTO, MatchResult>();
+        CreateMap<MatchResult, MatchResultResponseDTO>();
+
+        // Goal mappings — concatena FirstName y LastName del jugador en PlayerName
+        CreateMap<GoalRequestDTO, Goal>();
+        CreateMap<Goal, GoalResponseDTO>()
+            .ForMember(dest => dest.PlayerName,
+                opt => opt.MapFrom(src => src.Player.FirstName + " " + src.Player.LastName));
+
+        // Card mappings — misma estrategia que Goal
+        CreateMap<CardRequestDTO, Card>();
+        CreateMap<Card, CardResponseDTO>()
+            .ForMember(dest => dest.PlayerName,
+                opt => opt.MapFrom(src => src.Player.FirstName + " " + src.Player.LastName));
+
+        // MatchLineup mappings
+        CreateMap<CreateMatchLineupDto, MatchLineup>();
+        CreateMap<MatchLineup, MatchLineupDto>()
+            .ForMember(dest => dest.PlayerName,
+                opt => opt.MapFrom(src => src.Player.FirstName + " " + src.Player.LastName))
+            .ForMember(dest => dest.TeamName,
+                opt => opt.MapFrom(src => src.Player.Team.Name));
     }
 }

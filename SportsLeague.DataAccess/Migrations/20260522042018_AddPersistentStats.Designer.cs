@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SportsLeague.DataAccess.Context;
 
@@ -11,9 +12,11 @@ using SportsLeague.DataAccess.Context;
 namespace SportsLeague.DataAccess.Migrations
 {
     [DbContext(typeof(LeagueDbContext))]
-    partial class LeagueDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260522042018_AddPersistentStats")]
+    partial class AddPersistentStats
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,44 +148,6 @@ namespace SportsLeague.DataAccess.Migrations
                     b.ToTable("Matches");
                 });
 
-            modelBuilder.Entity("SportsLeague.Domain.Entities.MatchLineup", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsStarter")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("MatchId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PlayerId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Position")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PlayerId");
-
-                    b.HasIndex("MatchId", "PlayerId")
-                        .IsUnique();
-
-                    b.ToTable("MatchLineups");
-                });
-
             modelBuilder.Entity("SportsLeague.Domain.Entities.MatchResult", b =>
                 {
                     b.Property<int>("Id")
@@ -260,6 +225,91 @@ namespace SportsLeague.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Players");
+                });
+
+            modelBuilder.Entity("SportsLeague.Domain.Entities.PlayerDiscipline", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsSuspendedNextMatch")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RedCards")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TotalCards")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("YellowCards")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("RedCards", "YellowCards");
+
+                    b.HasIndex("TournamentId", "PlayerId")
+                        .IsUnique();
+
+                    b.ToTable("PlayerDisciplines");
+                });
+
+            modelBuilder.Entity("SportsLeague.Domain.Entities.PlayerScorer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Goals")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MatchesWithGoals")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Penalties")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PlayerId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PlayerId");
+
+                    b.HasIndex("Goals", "MatchesWithGoals");
+
+                    b.HasIndex("TournamentId", "PlayerId")
+                        .IsUnique();
+
+                    b.ToTable("PlayerScorers");
                 });
 
             modelBuilder.Entity("SportsLeague.Domain.Entities.Referee", b =>
@@ -381,6 +431,62 @@ namespace SportsLeague.DataAccess.Migrations
                         .IsUnique();
 
                     b.ToTable("Teams");
+                });
+
+            modelBuilder.Entity("SportsLeague.Domain.Entities.TeamStanding", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Draws")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoalDifference")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoalsAgainst")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GoalsFor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Losses")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MatchesPlayed")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Points")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeamId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TournamentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Wins")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("TeamId");
+
+                    b.HasIndex("TournamentId", "TeamId")
+                        .IsUnique();
+
+                    b.HasIndex("Points", "GoalDifference", "GoalsFor");
+
+                    b.ToTable("TeamStandings");
                 });
 
             modelBuilder.Entity("SportsLeague.Domain.Entities.Tournament", b =>
@@ -563,25 +669,6 @@ namespace SportsLeague.DataAccess.Migrations
                     b.Navigation("Tournament");
                 });
 
-            modelBuilder.Entity("SportsLeague.Domain.Entities.MatchLineup", b =>
-                {
-                    b.HasOne("SportsLeague.Domain.Entities.Match", "Match")
-                        .WithMany("Lineups")
-                        .HasForeignKey("MatchId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SportsLeague.Domain.Entities.Player", "Player")
-                        .WithMany("Lineups")
-                        .HasForeignKey("PlayerId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Match");
-
-                    b.Navigation("Player");
-                });
-
             modelBuilder.Entity("SportsLeague.Domain.Entities.MatchResult", b =>
                 {
                     b.HasOne("SportsLeague.Domain.Entities.Match", "Match")
@@ -602,6 +689,63 @@ namespace SportsLeague.DataAccess.Migrations
                         .IsRequired();
 
                     b.Navigation("Team");
+                });
+
+            modelBuilder.Entity("SportsLeague.Domain.Entities.PlayerDiscipline", b =>
+                {
+                    b.HasOne("SportsLeague.Domain.Entities.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SportsLeague.Domain.Entities.Tournament", "Tournament")
+                        .WithMany()
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+
+                    b.Navigation("Tournament");
+                });
+
+            modelBuilder.Entity("SportsLeague.Domain.Entities.PlayerScorer", b =>
+                {
+                    b.HasOne("SportsLeague.Domain.Entities.Player", "Player")
+                        .WithMany()
+                        .HasForeignKey("PlayerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SportsLeague.Domain.Entities.Tournament", "Tournament")
+                        .WithMany()
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Player");
+
+                    b.Navigation("Tournament");
+                });
+
+            modelBuilder.Entity("SportsLeague.Domain.Entities.TeamStanding", b =>
+                {
+                    b.HasOne("SportsLeague.Domain.Entities.Team", "Team")
+                        .WithMany()
+                        .HasForeignKey("TeamId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SportsLeague.Domain.Entities.Tournament", "Tournament")
+                        .WithMany()
+                        .HasForeignKey("TournamentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Team");
+
+                    b.Navigation("Tournament");
                 });
 
             modelBuilder.Entity("SportsLeague.Domain.Entities.TournamentSponsor", b =>
@@ -648,8 +792,6 @@ namespace SportsLeague.DataAccess.Migrations
 
                     b.Navigation("Goals");
 
-                    b.Navigation("Lineups");
-
                     b.Navigation("MatchResult");
                 });
 
@@ -658,8 +800,6 @@ namespace SportsLeague.DataAccess.Migrations
                     b.Navigation("Cards");
 
                     b.Navigation("Goals");
-
-                    b.Navigation("Lineups");
                 });
 
             modelBuilder.Entity("SportsLeague.Domain.Entities.Referee", b =>

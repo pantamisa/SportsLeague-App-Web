@@ -11,4 +11,8 @@ public class Player : AuditBase {
     public PlayerPosition Position { get; set; }
     public int TeamId { get; set; }
     public Team Team { get; set; } = null!;
+
+    public ICollection<Goal> Goals { get; set; } = new List<Goal>();
+    public ICollection<Card> Cards { get; set; } = new List<Card>();
+    public ICollection<MatchLineup> Lineups { get; set; } = new List<MatchLineup>();
 }
